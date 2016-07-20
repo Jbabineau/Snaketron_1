@@ -3,8 +3,59 @@
 <head>
     <title></title>
 	<meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href"index2.css" />
+    <script type="text/javascript" src="hammer.min.js"></script>
 </head>
 <body>
-    test
+    <h3>swipe</h3>
+    <div id="red" class="colorContainer">
+        <div class="color redColor"></div>
+    </div>
+
+    <h3>drag</h3>
+    <div id="blue" class="colorContainer">
+        <div class="color redColor"></div>
+    </div>
+
+    <h2 id="event"></h2>
+    <script type="text/javascript">
+        $(function () {
+            var red = document.getElementById("red"),
+                blue = document.getElementById("blue");
+
+            //jquery.hammer.js
+            // $(red).hammer().on("swipe", function(event) {
+            //     if(event.gesture.direction === "right") {
+            //         $(this).find(".color").animate({left: "+=100"}, 500);
+            //     } else if(event.gesture.direction === "left") {
+            //         $(this).find(".color").animate({left: "-=100"}, 500);
+            //     }
+            //     $("#event").text(event.gesture.direction);
+            // });
+
+            //hammer.js
+
+            //Swipe
+            Hammer(red).on("swipeleft", function () {
+                $(this).find(".color").animate({ left: "-=100" }, 500);
+                $("#event").text("swipe left");
+            });
+
+            Hammer(red).on("swiperight", function () {
+                $(this).find(".color").animate({ left: "+=100" }, 500);
+                $("#event").text("swipe right");
+            });
+
+            Hammer(red).on("swipeup", function () {
+                $(this).find(".color").animate({ left: "+=100" }, 500);
+                $("#event").text("swipe right");
+            });
+
+            Hammer(red).on("swipedown", function () {
+                $(this).find(".color").animate({ left: "+=100" }, 500);
+                $("#event").text("swipe right");
+            });
+        });
+    </script>
 </body>
 </html>
