@@ -3,6 +3,7 @@
 <HTML>
 <head>
     <title>Snake 0.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="app.css" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -39,23 +40,27 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
+                <div class="col-md-12 text-center">
                     <canvas id="canvas" width="450" height="450" style="border: solid black 1px;"></canvas>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4"></div>
             </div>
             <div class="row">
-                <div class="playerScore col-sm-6 col-md-4 col-lg-2">Score</div>
-                <div class="aiScore col-sm-6 col-md-4 col-lg-2">Opponent Score</div>
-                <div class="kills col-sm-6 col-md-4 col-lg-2">Kills</div>
-                <div class="playerBlocks col-sm-6 col-md-4 col-lg-2">Blocks</div>
-                <div class="suckScore col-sm-6 col-md-4 col-lg-2">SuckScore</div>
-                <div class="playerHighScore col-sm-6 col-md-4 col-lg-2"></div>
-                <div class="killsHighScore col-sm-6 col-md-4 col-lg-2"></div>
-                <div class="blocksHighScore col-sm-6 col-md-4 col-lg-2"></div>
-                <div class="suckScoreHighScore col-sm-6 col-md-4 col-lg-2"></div>
-                <div class="overallScore  col-sm-6 col-md-4 col-lg-2"></div>
+                <div class="col-sm-1"></div>
+                <div class="playerScore score col-sm-2 col-md-2 col-lg-2">Score</div>
+                <div class="kills score col-sm-2 col-md-2 col-lg-2">Kills</div>
+                <div class="playerBlocks score col-sm-2 col-md-2 col-lg-2">Blocks</div>
+                <div class="suckScore score col-sm-2 col-md-2 col-lg-2">SuckScore</div>
+                <div class="aiScore score col-sm-2 col-md-2 col-lg-2">Opponent Score</div>
+                <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="playerHighScore score col-sm-2 col-md-2 col-lg-2"></div>
+                <div class="killsHighScore score col-sm-2 col-md-2 col-lg-2"></div>
+                <div class="blocksHighScore score col-sm-2 col-md-2 col-lg-2"></div>
+                <div class="suckScoreHighScore score col-sm-2 col-md-2 col-lg-2"></div>
+                <div class="overallScore score col-sm-2 col-md-2 col-lg-2"></div>
+                <div class="col-sm-1"></div>
             </div>
             <hr>
             <div class="row">
@@ -483,7 +488,7 @@
 						$('.playerHighScore').text(scoreText);
 						$('.killsHighScore').text(killText);
 						$('.blocksHighScore').text(blockText);
-						$('.suckScoreHighScore').text(blockText);
+						$('.suckScoreHighScore').text(suckText);
 
 				}
 
