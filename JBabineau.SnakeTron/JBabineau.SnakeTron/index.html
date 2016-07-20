@@ -4,6 +4,7 @@
 <head>
     <title>Snake 0.3</title>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
 </head>
 <body>
     <div style="display: inline-block; width: 100%; padding-top: 15%;">
@@ -490,33 +491,64 @@
 				}
 
                 //Lets add the keyboard controls now
-                $(document).keydown(function(e){
-                        var key = e.which;
-                        //We will add another clause to prevent reverse gear
-                        if(key == "37" && player_direction != "right" && !check_collision(player_headX-1, player_headY, player_snake_array) ){
-							player_direction = "left";
-						}
-                        else if(key == "38" && player_direction != "down" && !check_collision(player_headX, player_headY-1, player_snake_array)){
-							player_direction = "up";
-						}
-                        else if(key == "39" && player_direction != "left" && !check_collision(player_headX+1, player_headY, player_snake_array)){
-							player_direction = "right";
-						}
-                        else if(key == "40" && player_direction != "up" && !check_collision(player_headX, player_headY+1, player_snake_array)){
-							player_direction = "down";
-						}
-						else if(key == "80")
-						{
-							if(player_direction == "pause"){
-								player_direction = lastPlayerMove;
-							}
-							else{
-								lastPlayerMove = player_direction;
-								player_direction = "pause";
-							}
-						}
-                        //The snake is now keyboard controllable
-                })
+				$(document).keydown(function (e) {
+				    var key = e.which;
+				    //We will add another clause to prevent reverse gear
+				    if (key == "37" && player_direction != "right" && !check_collision(player_headX - 1, player_headY, player_snake_array)) {
+				        player_direction = "left";
+				    }
+				    else if (key == "38" && player_direction != "down" && !check_collision(player_headX, player_headY - 1, player_snake_array)) {
+				        player_direction = "up";
+				    }
+				    else if (key == "39" && player_direction != "left" && !check_collision(player_headX + 1, player_headY, player_snake_array)) {
+				        player_direction = "right";
+				    }
+				    else if (key == "40" && player_direction != "up" && !check_collision(player_headX, player_headY + 1, player_snake_array)) {
+				        player_direction = "down";
+				    }
+				    else if (key == "80") {
+				        if (player_direction == "pause") {
+				            player_direction = lastPlayerMove;
+				        }
+				        else {
+				            lastPlayerMove = player_direction;
+				            player_direction = "pause";
+				        }
+				    }
+				    //The snake is now keyboard controllable
+				});
+
+				var myElement = document.getElementById('canvas');
+
+                // create a simple instance
+                // by default, it only adds horizontal recognizers
+				var mc = new Hammer(myElement);
+				mc.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+                // listen to events...
+				mc.on("swipeleft swiperight tap press swipeup swipedown", function (ev) {
+				    myElement.textContent = ev.type + " gesture detected.";
+				    if (ev.type == "swipeleft" && player_direction != "right" && !check_collision(player_headX - 1, player_headY, player_snake_array)) {
+				        player_direction = "left";
+				    }
+				    else if (ev.type == "swipeup" && player_direction != "down" && !check_collision(player_headX, player_headY - 1, player_snake_array)) {
+				        player_direction = "up";
+				    }
+				    else if (ev.type == "swiperight" && player_direction != "left" && !check_collision(player_headX + 1, player_headY, player_snake_array)) {
+				        player_direction = "right";
+				    }
+				    else if (ev.type == "swipedown" && player_direction != "up" && !check_collision(player_headX, player_headY + 1, player_snake_array)) {
+				        player_direction = "down";
+				    }
+				    else if (ev.type == "tap") {
+				        if (player_direction == "pause") {
+				            player_direction = lastPlayerMove;
+				        }
+				        else {
+				            lastPlayerMove = player_direction;
+				            player_direction = "pause";
+				        }
+				    }
+				});
             });
     </script>
 </body>
