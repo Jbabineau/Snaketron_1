@@ -74,7 +74,17 @@
         </div>
     </div>
     <script type="text/javascript">
-            $(document).ready(function(){
+        $(document).ready(function () {
+            //ga
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-81083200-1', 'auto');
+            ga('send', 'pageview');
                 // Global variables
 				// TODO: There hs to be a better way.
                 var canvas = $("#canvas")[0];
@@ -537,6 +547,11 @@
 					//console.log('Score: ' + score + ' score - 100: ' +(score - 100) + ' playerKills: ' + playerkills + ' avgEnemyLength: ' + avgEnemyLength
 					//+ ' (playerkills * avgEnemyLength): ' + (playerkills * avgEnemyLength) + ' suckScore + score2: ' + (suckScore + score2) +  ' blocks*3: ' + (playerBlocks *3));
 					$('.overallScore').text(finalScore);
+					ga('send', {
+					    hitType: 'event',
+					    eventCategory: 'game',
+					    eventAction: 'play'
+					});
 				}
 
                 //Lets add the keyboard controls now
@@ -599,16 +614,6 @@
 				    }
 				});
             });
-    </script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-81083200-1', 'auto');
-      ga('send', 'pageview');
-
     </script>
 </body>
 </HTML>
