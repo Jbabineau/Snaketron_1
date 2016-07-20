@@ -1,0 +1,523 @@
+﻿
+<!DOCTYPE HTML>
+<HTML>
+<head>
+    <title>Snake 0.3</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+    <div style="display: inline-block; width: 100%; padding-top: 15%;">
+        <div class="info" style="display: inline-block; float: left; padding-left: 30%;">
+            <div class="playerScore" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;"></div>
+            <div class="aiScore" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;">	</div>
+            <div class="kills" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;"></div>
+            <div class="playerBlocks" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;"></div>
+            <div class="suckScore" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;"></div>
+            <div class="playerHighScore" style="background:#000; color:#ffd700; border: solid black 1px; width: 100px; height: 48px;"></div>
+            <div class="killsHighScore" style="background:#000; color:#ffd700; border: solid black 1px; width: 100px; height: 48px;"></div>
+            <div class="blocksHighScore" style="background:#000; color:#ffd700; border: solid black 1px; width: 100px; height: 48px;"></div>
+            <div class="suckScoreHighScore" style="background:#000; color:#ffd700; border: solid black 1px; width: 100px; height: 48px;"></div>
+        </div>
+        <canvas id="canvas" width="450" height="450" style="border: solid black 1px; float: left;"></canvas>
+        <div style="border: solid black 1px; float: left;">
+            <div class="overallScore" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+            $(document).ready(function(){
+                // Global variables
+				// TODO: There hs to be a better way.
+                var canvas = $("#canvas")[0];
+                var ctx = canvas.getContext("2d");
+                var width = $("#canvas").width();
+                var height = $("#canvas").height();
+                var highscore = 0;
+                var colorValue = 255;
+                var computer_headX;
+                var computer_headY;
+				var player_headX;
+                var player_headY;
+				var userName = "";
+				var playerkills = 0;
+				var lastPlayerPosition = "";
+				var playerBlocks = 0;
+				var suckScore = 0;
+                localStorage.setItem("highscore", 0);
+				localStorage.setItem("playerkills", 0);
+                localStorage.setItem("blocks", 0);
+				localStorage.setItem("suckScore", 0);
+                var cellWidth = 10;
+                var player_direction;
+                var computer_direction;
+                var food;
+                var score;
+                var score2;
+                var powerUp;
+                var player_snake_array;
+                var computer_snake_array;
+                var aroundFoodArray = [false, false, false, false, false, false, false,];
+				var finalScore = 0;
+				var avgEnemyLength = 0;
+				// [0][1][2]
+				// [3]   [4]
+				// [5][6][7]
+
+				/**
+				 * Initial game setup and reseting of variables.
+				 */
+                function init()
+                {
+                        player_direction = "pause";
+                        computer_direction = "left";
+                        create_player_snake();
+                        create_computer_snake();
+                        create_food();
+                        score = 0;
+                        score2 = 0;
+                        colorValue = 255;
+						playerkills = 0;
+						playerBlocks = 0;
+						suckScore = 0;
+						finalScore = 0;
+						avgEnemyLength = 0;
+                        // Lets move the snake now using a timer
+                        // which will trigger the paint function every 60ms
+						// TODO: Split the paint and logic
+                        if(typeof game_loop != "undefined") clearInterval(game_loop);
+                        game_loop = setInterval(paint,50);
+
+						// Render the high scores based on local storage
+						updateHighScore();
+						aroundFoodArray = [false, false, false, false, false, false, false,];
+                }
+                init();
+
+				/**
+				 * Creates a new player snake.
+				 * Starting length of the snake is
+				 * 5 and we build from (0,5)
+				 * back to (0,1).
+				 */
+                function create_player_snake() {
+					var length = 5;
+					player_snake_array = [];
+					for(var i = length-1; i>=0; i--) {
+						player_snake_array.push({x: i, y:0});
+					}
+                }
+
+				/**
+				 * Creates a new computer snake.
+				 * Starting length of the snake is
+				 * 5 and we build from (39,44)
+				 * back to (44,44). We also reset the
+				 * computer score back to zero here. (Should move that)
+				 */
+                function create_computer_snake()
+                {
+					var length = 5;
+					computer_snake_array = [];
+					for(var i = length; i>=0; i--){
+						computer_snake_array.push({x: 44 - i, y:44});
+					}
+					// TODO: move this block to somewhere else.
+					computer_headX = computer_snake_array[0].x;
+					computer_headY = computer_snake_array[0].y;
+					computer_direction = "left";
+					score2 = 0;
+                }
+
+                /**
+				 * This Creates a new food on the game
+				 * board at a random square.
+				 */
+                function create_food() {
+					aroundFoodArray = [false, false, false, false, false, false, false,];
+					var valid = false;
+					var tempFood;
+					while(!valid) {
+						tempFood = {
+							x: Math.round(Math.random()*(width-cellWidth)/cellWidth),
+							y: Math.round(Math.random()*(height-cellWidth)/cellWidth)
+						}
+
+						if(!check_collision(tempFood.x, tempFood.y, player_snake_array) && !check_collision(tempFood.x, tempFood.y, computer_snake_array)) {
+							food = {
+								x: tempFood.x,
+								y: tempFood.y,
+							}
+							valid = true;
+						}
+					}
+                }
+
+                /**
+				 * This is the logic and the rendering
+				 * this needs to be broken out.
+				 */
+                function paint()
+                {
+					if(player_direction != "pause") {
+                        if (colorValue <0){
+                            colorValue = 0;
+                        }
+						// Redraw the board every frame.
+                        var color = "rgb(255," + colorValue + "," + colorValue + ")";
+                        ctx.fillStyle = color;
+                        ctx.fillRect(0, 0,width,height);
+                        ctx.strokeStyle = "black";
+                        ctx.strokeRect(0, 0,width,height);
+
+                        //The movement code for the snake to come here.
+                        //The logic is simple
+                        //Pop out the tail cell and place it infront of the head cell
+                        player_headX = player_snake_array[0].x;
+                        player_headY = player_snake_array[0].y;
+                        computer_headX = computer_snake_array[0].x;
+                        computer_headY = computer_snake_array[0].y;
+                        //These were the position of the head cell.
+                        //We will increment it to get the new head position
+                        //Lets add proper player_direction based movement now
+                        if(player_direction == "right") player_headX++;
+                        else if(player_direction == "left") player_headX--;
+                        else if(player_direction == "up") player_headY--;
+                        else if(player_direction == "down") player_headY++;
+
+                        if(computer_direction == "right") computer_headX++;
+                        else if(computer_direction == "left") computer_headX--;
+                        else if( computer_direction == "up") computer_headY--;
+                        else if(computer_direction == "down") computer_headY++;
+
+                        if(computer_headX == food.x && computer_headY > food.y && computer_direction != "down"){
+                            computer_direction = "up";
+                        }else if(computer_headX == food.x && computer_headY < food.y && computer_direction != "up") {
+                            computer_direction = "down";
+                        }
+                        else if(computer_headY == food.y && computer_headX < food.x && computer_direction != "left"){
+                            computer_direction = "right";
+                        }else if(computer_headY == food.y && computer_headX > food.x && computer_direction != "right"){
+                            computer_direction = "left";
+                        }
+                        if(computer_headX == 0 && computer_direction == "left"){
+                            if(computer_headY == 0 ){
+                                computer_direction = "down";
+                            } else if(computer_headY == 44){
+                                computer_direction = "up";
+                            }
+                            else if(computer_headY > food.y){
+                                computer_direction = "up";
+                            }
+                            else{
+                                computer_direction = "down";
+                            }
+                        }
+                        if(computer_headX == 44 && computer_direction == "right"){
+                            if(computer_headY == 0 ){
+                                computer_direction = "down";
+                            } else if(computer_headY == 44){
+                                computer_direction = "up";
+                            }
+                            else if(computer_headY > food.y){
+                                computer_direction = "up";
+                            }
+                            else{
+                                computer_direction = "down";
+                            }
+                        }
+                        if(computer_headY == 0 && computer_direction == "up"){
+                            if(computer_headX == 0 ){
+                                computer_direction = "right";
+                            } else if(computer_headX == 44){
+                                computer_direction = "left";
+                            }
+                            else if(computer_headX > food.x){
+                                computer_direction = "left";
+                            }
+                            else{
+                                computer_direction = "right";
+                            }
+                        }
+                        if(computer_headY == 44 && computer_direction == "down"){
+                            if(computer_headX == 0 ){
+                                computer_direction = "right";
+                            } else if(computer_headX == 44){
+                                computer_direction = "left";
+                            }
+                            else if(computer_headX < food.x){
+                                computer_direction = "left";
+                            }
+                            else{
+                                computer_direction = "right";
+                            }
+                        }
+                        if(computer_direction == "up" && check_collision(computer_headX,(computer_headY-1), player_snake_array)) {
+							playerBlocks ++;
+                            if(!check_collision((computer_headX+1),computer_headY, player_snake_array))
+                            {
+                                computer_direction = "right";
+                            }
+                            else{
+                                computer_direction = "left";
+                            }
+                        }
+                        if(computer_direction == "down" && check_collision(computer_headX,(computer_headY+1), player_snake_array)) {
+							playerBlocks++;
+                            if(!check_collision((computer_headX+1),computer_headY, player_snake_array))
+                            {
+                                computer_direction = "right";
+                            }
+                            else{
+                                computer_direction = "left";
+                            }
+                        }
+                        if(computer_direction == "left" && check_collision((computer_headX-1),computer_headY, player_snake_array)) {
+							playerBlocks++;
+                            if(!check_collision(computer_headX,(computer_headY+1), player_snake_array))
+                            {
+                                computer_direction = "down";
+                            }
+                            else{
+                                computer_direction = "up";
+                            }
+                        }
+
+                        if(computer_direction == "right" && check_collision((computer_headX+1),computer_headY, player_snake_array)) {
+							playerBlocks++;
+                            if(!check_collision(computer_headX,(computer_headY+1), player_snake_array))
+                            {
+                                computer_direction = "down";
+                            }
+                            else{
+                                computer_direction = "up";
+                            }
+                        }
+
+                        if(player_headX == -1 || player_headX ==width/cellWidth || player_headY == -1 || player_headY ==height/cellWidth || check_collision(player_headX, player_headY, player_snake_array) || check_collision(player_headX, player_headY, computer_snake_array)) {
+                            updateHighScore();
+							calculateFinalScore();
+							init();
+							return;
+                        }
+
+                        if(computer_headX == -1 || computer_headX == width/cellWidth || computer_headY == -1 || computer_headY == height/cellWidth || check_collision(computer_headX, computer_headY, player_snake_array) || check_collision(computer_headX, computer_headY, computer_snake_array))
+                        {
+							playerkills++;
+							avgEnemyLength += computer_snake_array.length;
+                            create_computer_snake();
+                        }
+                        //Lets write the code to make the snake eat the food
+                        //The logic is simple
+                        //If the new head position matches with that of the food,
+                        //Create a new head instead of moving the tail
+                        if(player_headX == food.x && player_headY == food.y)
+                        {
+                                var tail = {x: player_headX, y: player_headY};
+                                score++;
+                                if(score % 50 < 25){
+                                    colorValue -= 10;
+                                }
+                                else{
+                                    colorValue += 10;
+                                }
+                                //Create new food
+                                create_food();
+                                var tail2 = computer_snake_array.pop();
+                                tail2.x = computer_headX; tail2.y = computer_headY;
+								suckScore--;
+                        }
+                        else if(computer_headX == food.x && computer_headY == food.y){
+                            var tail2 = {x: computer_headX, y: computer_headY};
+                                score2++;
+
+                                //Create new food
+                                create_food();
+                                var tail = player_snake_array.pop();
+                                tail.x = player_headX; tail.y = player_headY;
+                        }
+                        else
+                        {
+							var tail = player_snake_array.pop();
+							tail.x = player_headX; tail.y = player_headY;
+
+							var tail2 = computer_snake_array.pop();
+							tail2.x = computer_headX; tail2.y = computer_headY;
+
+							checkSuckScore();
+                        }
+
+                        player_snake_array.unshift(tail); //puts back the tail as the first cell
+                        computer_snake_array.unshift(tail2);
+
+                        for(var i = 0; i < player_snake_array.length; i++)
+                        {
+                                var c = player_snake_array[i];
+                                //Lets paint 10px wide cells
+                                paint_cell(c.x, c.y, "blue");
+                        }
+
+                        for(var i=1; i < computer_snake_array.length; i++)
+                        {
+                            var s = computer_snake_array[i];
+                            paint_cell(s.x, s.y, "red");
+                        }
+
+                        // Paint the food
+                        paint_cell(food.x, food.y, "green");
+
+
+						updateScore();
+					}
+                }
+
+                //Lets first create a generic function to paint cells
+                function paint_cell(x, y, color) {
+                        ctx.fillStyle = color;
+                        ctx.fillRect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+                        ctx.strokeStyle = "white";
+                        ctx.strokeRect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+                }
+
+                function check_collision(x, y, array) {
+                        //This function will check if the provided x/y coordinates exist
+                        //in an array of cells or not
+                        for(var i = 0; i < array.length; i++)
+                        {
+								//console.log('array x: ' + array[i].x + 'array.y: ' + array[i].y);
+                                if(array[i].x == x && array[i].y == y) {
+									console.log('Collision: array x: ' + array[i].x + 'array.y: ' + array[i].y + 'with x: ' + x + ' y: ' + y);
+									debugger;
+									return true;
+								}
+                        }
+                        return false;
+                }
+
+				function updateScore() {
+					$(".playerScore").text("Score: " + score);
+					$(".aiScore").text("Opponent: " + score2);
+					$(".kills").text("Kills: " + playerkills);
+					$(".playerBlocks").text("Blocks: " + playerBlocks);
+					$(".suckScore").text("Suck Score: " + suckScore);
+				}
+                function updateHighScore() {
+					var text = "";
+					var scoreText = "";
+					var killText = "";
+					var blockText = "";
+					var suckText = "";
+						if(score > localStorage.getItem("highscore"))
+						{
+							localStorage.setItem("highscore", score);
+							scoreText = "High Score: " + score;
+						}
+						else {
+							scoreText = "High Score: " + localStorage.getItem("highscore");
+						}
+						if(playerkills > localStorage.getItem("playerkills"))
+						{
+							localStorage.setItem("playerkills", playerkills);
+							killText = "High Score for Kills: " + playerkills;
+						}
+						else {
+							killText = "High Score for Kills: " + localStorage.getItem("playerkills");
+						}
+						if(playerBlocks > localStorage.getItem("blocks"))
+						{
+							localStorage.setItem("blocks", playerBlocks);
+							blockText = "High Score Blocks: " + playerBlocks;
+						}
+						else {
+							blockText = "High Score Blocks: " + localStorage.getItem("blocks");
+						}
+						if(suckScore > localStorage.getItem("suckScore")) {
+							localStorage.setItem("suckScore", suckScore);
+							suckText = "High Score Suck Score: " + suckScore;
+						}
+						else {
+							suckText = "High Score Suck Score: " + localStorage.getItem("suckScore");
+						}
+						$('.playerHighScore').text(scoreText);
+						$('.killsHighScore').text(killText);
+						$('.blocksHighScore').text(blockText);
+						$('.suckScoreHighScore').text(blockText);
+
+				}
+
+				function checkSuckScore() {
+					//var aroundFoodArray = [false, false, false, false, false, false, false,];
+					// [0][1][2]
+					// [3]   [4]
+					// [5][6][7]
+					if(player_headX == food.x + 1 && player_headY == food.y && aroundFoodArray[4] == false) {
+						aroundFoodArray[4] = true;
+						suckScore++;
+					}
+					if(player_headX == food.x - 1 && player_headY == food.y && aroundFoodArray[3] == false){
+						aroundFoodArray[3] = true;
+						suckScore++;
+					}
+					if(player_headY == food.y + 1 && player_headX == food.x && aroundFoodArray[6] == false){
+						aroundFoodArray[6] = true;
+						suckScore++;
+					}
+					if(player_headY == food.y - 1 && player_headX == food.x && aroundFoodArray[1] == false){
+						aroundFoodArray[1] = true;
+						suckScore++;
+					}
+					/*if((player_headX == food.x + 1 && player_headY == food.y + 1) && aroundFoodArray[7] == false){
+						aroundFoodArray[7] = true;
+						suckScore++;
+					}
+					if((player_headX == food.x + 1 && player_headY == food.y - 1) && aroundFoodArray[2] == false){
+						aroundFoodArray[2] = true;
+						suckScore++;
+					}
+					if((player_headX == food.x - 1 && player_headY == food.y + 1) && aroundFoodArray[5] == false){
+						aroundFoodArray[5] = true;
+						suckScore++;
+					}
+					if((player_headX == food.x - 1 && player_headY == food.y - 1) && aroundFoodArray[1] == false){
+						aroundFoodArray[1] = true;
+						suckScore++;
+					}*/
+				}
+
+				function calculateFinalScore() {
+					finalScore = (((score - 100) + (playerkills * avgEnemyLength)) - ((suckScore + score2) - (playerBlocks *3)));
+					//console.log('Score: ' + score + ' score - 100: ' +(score - 100) + ' playerKills: ' + playerkills + ' avgEnemyLength: ' + avgEnemyLength
+					//+ ' (playerkills * avgEnemyLength): ' + (playerkills * avgEnemyLength) + ' suckScore + score2: ' + (suckScore + score2) +  ' blocks*3: ' + (playerBlocks *3));
+					$('.overallScore').text(finalScore);
+				}
+
+                //Lets add the keyboard controls now
+                $(document).keydown(function(e){
+                        var key = e.which;
+                        //We will add another clause to prevent reverse gear
+                        if(key == "37" && player_direction != "right" && !check_collision(player_headX-1, player_headY, player_snake_array) ){
+							player_direction = "left";
+						}
+                        else if(key == "38" && player_direction != "down" && !check_collision(player_headX, player_headY-1, player_snake_array)){
+							player_direction = "up";
+						}
+                        else if(key == "39" && player_direction != "left" && !check_collision(player_headX+1, player_headY, player_snake_array)){
+							player_direction = "right";
+						}
+                        else if(key == "40" && player_direction != "up" && !check_collision(player_headX, player_headY+1, player_snake_array)){
+							player_direction = "down";
+						}
+						else if(key == "80")
+						{
+							if(player_direction == "pause"){
+								player_direction = lastPlayerMove;
+							}
+							else{
+								lastPlayerMove = player_direction;
+								player_direction = "pause";
+							}
+						}
+                        //The snake is now keyboard controllable
+                })
+            });
+    </script>
+</body>
+</HTML>
