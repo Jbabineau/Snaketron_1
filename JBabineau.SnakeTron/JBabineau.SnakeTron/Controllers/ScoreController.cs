@@ -22,9 +22,16 @@ namespace JBabineau.SnakeTron.Controllers
             return result;
         }
 
-        public void AddScore()
+        [HttpPost]
+        public void AddScore(Score score)
         {
+            score.DateSubmitted = DateTime.Now;
 
+            using (SnaketronEntities ctx = new SnaketronEntities())
+            {
+                ctx.Scores.Add(score);
+                ctx.SaveChanges();
+            }
         }
     }
 }
