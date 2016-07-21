@@ -551,6 +551,21 @@
 					    eventCategory: 'game',
 					    eventAction: 'play'
 					});
+
+				    // submit the data to the API
+					$.post("api/Score",
+                    {
+                        Id: 1,
+                        UserName: "Test",
+                        Score1: score,
+                        Kills: playerkills,
+                        Blocks: playerBlocks,
+                        Missed: suckScore,
+                        DateSumbitted: new Date()
+                    },
+                    function (data, status) {
+                        alert("Data: " + data + "\nStatus: " + status);
+                    });
 				}
 
                 //Lets add the keyboard controls now

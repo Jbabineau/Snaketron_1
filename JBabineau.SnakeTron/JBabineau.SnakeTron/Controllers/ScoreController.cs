@@ -13,10 +13,18 @@ namespace JBabineau.SnakeTron.Controllers
         public List<Score> GetScores()
         {
             List<Score> result = new List<Score>();
-
-            using (SnaketronEntities ctx = new SnaketronEntities())
+            try
             {
-                result = ctx.Scores.Take(10).OrderBy(s => s.Score1).ToList();
+
+
+                using (SnaketronEntities ctx = new SnaketronEntities())
+                {
+                    result = ctx.Scores.Take(10).OrderBy(s => s.Score1).ToList();
+                }
+            }
+            catch(Exception ex)
+            {
+                int breakpoint = 1;
             }
 
             return result;
@@ -26,11 +34,28 @@ namespace JBabineau.SnakeTron.Controllers
         public void AddScore(Score score)
         {
             score.DateSubmitted = DateTime.Now;
+            score.Id = 0;
 
-            using (SnaketronEntities ctx = new SnaketronEntities())
+            Score tempScore = new Score
             {
-                ctx.Scores.Add(score);
-                ctx.SaveChanges();
+                UserName = score.UserName,
+                Score1 = score.Score1,
+                Kills = score.Kills,
+                Blocks = score.Blocks,
+                Missed = score.Missed,
+                DateSubmitted = score.DateSubmitted
+            };
+            try {
+
+                using (SnaketronEntities ctx = new SnaketronEntities())
+                {
+                    ctx.Scores.Add(tempScore);
+                    ctx.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                int breakpoint = 1;
             }
         }
     }
