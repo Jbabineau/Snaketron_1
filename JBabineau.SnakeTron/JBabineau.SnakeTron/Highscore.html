@@ -4,10 +4,57 @@
     <title>Snaketron - Highscore</title>
 	<meta charset="utf-8" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <style>
+        .css-throbber {
+	        color: #888;
+	        display: inline-block;
+	        -moz-transform-origin: 50% 52%;
+            margin-left: 30%;
+            margin-top: 10%;
+        }
+        .css-throbber-active {
+	        -animation: rotate 1.5s infinite linear;
+	        -moz-animation: rotate 1.5s infinite linear;
+	        -webkit-animation: rotate 1.5s infinite linear;
+        }
+        .css-throbber:after {
+	        content: '↻';
+	        font-family: 'Arial Unicode MS';
+	        font-size: 40px;
+	        -vertical-align: 0.075em;
+        }
+        .css-throbber.css-throbber-chrome:after {
+	        vertical-align: 0em;
+        }
+        @keyframes rotate {
+	        0% {transform: rotate(0deg)}
+	        100% {transform: rotate(360deg)}
+        }
+        @-moz-keyframes rotate {
+	        0% {-moz-transform: rotate(0deg)}
+	        100% {-moz-transform: rotate(360deg)}
+        }
+        @-webkit-keyframes rotate {
+	        0% {-webkit-transform: rotate(0deg)}
+	        100% {-webkit-transform: rotate(360deg)}
+        }
+    </style>
 </head>
 <body>
+    <span id="css-throbber"></span>
     <table id="highscore">
-        <tr><th>Name</th><th>Score</th><th>Blocks</th><th>Kills</th><th>Suck Score</th><th>Time</th></tr>
+        <thead>
+            <tr>
+                <th><div id="Name">Name</div></th>
+                <th><div id="Score">Score</div></th>
+                <th><div id="Blocks">Blocks</div></th>
+                <th><div id="Kills">Kills</div></th>
+                <th><div id="Misses">Suck Score</div></th>
+                <th><div id="Time">Time</div></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
     </table>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -21,24 +68,94 @@
 
             ga('create', 'UA-81083200-1', 'auto');
             ga('send', 'pageview');
+            showThrobber();
+            $.get("api/Score/GetScores", function (data) {
+                populateTable(data);
+            });
+        });
 
-            $.get("api/Score", function (data) {
-                console.log(data);
-                var numRecords = data.length;
-                /*
-                Blocks: 10
-DateSubmitted: "2016-07-22T05:51:51.5458334-04:00"
-Id: 2
-Kills: 1
-Missed: 100
-Score1: 0
-UserName: "Ralph"
-                */
-                for(var i = 0; i < numRecords; i++) {
-                    $('#highscore tr:last').after('<tr><td>' + data[i].UserName + 
-                        '</td><td>' + data[i].Score1 + '</td><td>' + data[i].Blocks + 
-                        '</td><td>' + data[i].Kills + '</td><td>' + data[i].Missed + '</td><td>' + data[i].DateSubmitted + '</td></tr>');
-                }
+        $.fn.throbber = function (action, msg) {
+            this.show = function () {
+                this.addClass('css-throbber');
+                return this;
+            };
+            this.hide = function () {
+                this.removeClass('css-throbber css-throbber-active');
+                return this;
+            };
+            this.start = function () {
+                this.addClass('css-throbber css-throbber-active');
+                return this;
+            };
+            this.stop = function () {
+                this.removeClass('css-throbber-active');
+                return this;
+            };
+            //navigator.userAgent.indexOf('Chrome') != -1 && this.addClass('css-throbber-chrome');
+            if (action) {
+                this[action](msg);
+            }
+            return this;
+        }
+		
+        function populateTable(data) {
+            $('#highscore tbody').empty();
+
+            var numRecords = data.length;
+
+            for (var i = 0; i < numRecords; i++) {
+                $('#highscore tbody:last-child').append('<tr><td>' + data[i].UserName +
+                    '</td><td>' + data[i].Score1 + '</td><td>' + data[i].Blocks +
+                    '</td><td>' + data[i].Kills + '</td><td>' + data[i].Missed + '</td><td>' + data[i].DateSubmitted + '</td></tr>');
+            }
+            hideThrobber();
+        };
+
+        function showThrobber() {
+            $('#highscore').hide();
+            $('#css-throbber').throbber().show();
+            $('#css-throbber').throbber().start();
+        };
+
+        function hideThrobber() {
+            $('#css-throbber').throbber().stop();
+            $('#css-throbber').throbber().hide();
+            $('#highscore').show();
+        };
+
+        $('#Name').click(function () {
+            var name = prompt("Enter name you want scores for", "Raph sucks");
+            showThrobber();
+            $.get("api/Score/GetName/" + encodeURIComponent(name), function (data) {
+                populateTable(data);
+            });
+        });
+
+        $('#Score').click(function () {
+            showThrobber();
+            $.get("api/Score/GetScores", function (data) {
+                populateTable(data);
+            });
+        });
+        
+        $('#Blocks').click(function () {
+            showThrobber();
+            $.get("api/Score/GetBlocks", function (data) {
+                populateTable(data);
+            });
+        });
+
+        $('#Kills').click(function () {
+            showThrobber();
+            $.get("api/Score/GetKills", function (data) {
+                populateTable(data);
+            });
+        });
+
+        $('#Misses').click(function () {
+            showThrobber();
+            $.get("api/Score/GetMisses", function (data) {
+                populateTable(data);
             });
         });
     </script>

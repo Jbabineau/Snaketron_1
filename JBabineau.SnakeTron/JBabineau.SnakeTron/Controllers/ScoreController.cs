@@ -9,7 +9,37 @@ namespace JBabineau.SnakeTron.Controllers
 {
     public class ScoreController : ApiController
     {
-        // Get: 
+        // Get: api/Score/GetName/{name}
+        [HttpGet]
+        public List<Score> GetName(string name)
+        {
+            List<Score> result = new List<Score>();
+            try
+            {
+                using (SnaketronEntities ctx = new SnaketronEntities())
+                {
+                    result = ctx.Scores.Where(s => s.UserName.ToUpper() == name.ToUpper()).Take(10).OrderByDescending(s => s.Score1).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                /*TESTING ONLY*/
+                int breakpoint = 1;
+                Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
+                Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
+                Score three = new Score { Id = 3, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Ralph", DateSubmitted = DateTime.Now.AddHours(-10) };
+                result.Add(one);
+                result.Add(two);
+                result.Add(three);
+
+                result = result.Where(s => s.UserName == name).Take(10).OrderByDescending(s => s.Score1).ToList();
+            }
+
+            return result;
+        }
+
+        // Get: api/Score/GetScores
+        [HttpGet]
         public List<Score> GetScores()
         {
             List<Score> result = new List<Score>();
@@ -22,13 +52,92 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch(Exception ex)
             {
-                /* TESTING ONLY
+                /* TESTING ONLY*/
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
                 Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
                 result.Add(one);
                 result.Add(two);
-                */
+
+                result = result.Take(10).OrderByDescending(s => s.Score1).ToList();
+            }
+
+            return result;
+        }
+
+        // Get: api/Score/GetBlocks
+        [HttpGet]
+        public List<Score> GetBlocks()
+        {
+            List<Score> result = new List<Score>();
+            try
+            {
+                using (SnaketronEntities ctx = new SnaketronEntities())
+                {
+                    result = ctx.Scores.Take(10).OrderByDescending(s => s.Blocks).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                /*TESTING ONLY*/
+                int breakpoint = 1;
+                Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
+                Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
+                result.Add(one);
+                result.Add(two);
+                result = result.Take(10).OrderByDescending(s => s.Blocks).ToList();
+            }
+
+            return result;
+        }
+
+        // Get: api/Score/Get/Kills
+        [HttpGet]
+        public List<Score> GetKills()
+        {
+            List<Score> result = new List<Score>();
+            try
+            {
+                using (SnaketronEntities ctx = new SnaketronEntities())
+                {
+                    result = ctx.Scores.Take(10).OrderByDescending(s => s.Kills).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                /*TESTING ONLY*/
+                int breakpoint = 1;
+                Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
+                Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
+                result.Add(one);
+                result.Add(two);
+                result = result.Take(10).OrderByDescending(s => s.Kills).ToList();
+            }
+
+            return result;
+        }
+
+        // Get: api/Score/Get/Misses
+        [HttpGet]
+        public List<Score> GetMisses()
+        {
+            List<Score> result = new List<Score>();
+            try
+            {
+                using (SnaketronEntities ctx = new SnaketronEntities())
+                {
+                    result = ctx.Scores.Take(10).OrderByDescending(s => s.Missed).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                /*TESTING ONLY*/
+                int breakpoint = 1;
+                Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
+                Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
+                result.Add(one);
+                result.Add(two);
+                result = result.Take(10).OrderByDescending(s => s.Missed).ToList();
             }
 
             return result;
