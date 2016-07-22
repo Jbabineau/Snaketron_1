@@ -11,14 +11,14 @@ namespace JBabineau.SnakeTron.Controllers
     {
         // Get: api/Score/GetName/{name}
         [HttpGet]
-        public List<Score> GetName(string name)
+        public List<Score> GetName(string name, int amount)
         {
             List<Score> result = new List<Score>();
             try
             {
                 using (SnaketronEntities ctx = new SnaketronEntities())
                 {
-                    result = ctx.Scores.Where(s => s.UserName.ToUpper() == name.ToUpper()).Take(10).OrderByDescending(s => s.Score1).ToList();
+                    result = ctx.Scores.Where(s => s.UserName.ToUpper() == name.ToUpper()).OrderByDescending(s => s.Score1).Take(amount).ToList();
                 }
             }
             catch (Exception ex)
