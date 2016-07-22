@@ -177,6 +177,14 @@
                 populateTable(data);
             });
         });
+
+        $('#top').change(function () {
+            showThrobber();
+            var amount = $('#top').val();
+            $.get("api/Score/GetScores/" + amount, function (data) {
+                populateTable(data);
+            });
+        });
     </script>
 </body>
 </html>
