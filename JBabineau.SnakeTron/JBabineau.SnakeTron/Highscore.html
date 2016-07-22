@@ -76,7 +76,8 @@
             ga('create', 'UA-81083200-1', 'auto');
             ga('send', 'pageview');
             showThrobber();
-            $.get("api/Score/GetScores", function (data) {
+            var amount = $('#top').val();
+            $.get("api/Score/GetScores/" + amount, function (data) {
                 populateTable(data);
             });
         });
