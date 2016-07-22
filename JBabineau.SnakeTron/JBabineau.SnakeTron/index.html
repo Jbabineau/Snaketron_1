@@ -8,7 +8,8 @@
 </head>
 <body>
     <div style="display: inline-block; width: 100%; padding-top: 15%;">
-        <div class="info" style="display: inline-block; float: left; padding-left: 30%;">
+        <div style="padding-left: 30%;">Your Name : <input type="text" id="userName" /></div>
+        <div class="info" style="float: left; padding-left: 30%;">
             <div class="playerScore" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;"></div>
             <div class="aiScore" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;">	</div>
             <div class="kills" style="background:#fff; color:#000; border: solid black 1px; width: 100px; height: 48px;"></div>
@@ -53,10 +54,21 @@
 				var lastPlayerPosition = "";
 				var playerBlocks = 0;
 				var suckScore = 0;
-                localStorage.setItem("highscore", 0);
-				localStorage.setItem("playerkills", 0);
-                localStorage.setItem("blocks", 0);
-				localStorage.setItem("suckScore", 0);
+				if (localStorage.getItem("userName") != "undefined") {
+				    $("#userName").val(localStorage.getItem("userName"));
+				}
+				if (localStorage.getItem("highscore") != "") {
+				    localStorage.setItem("highscore", 0);
+				}
+				if (localStorage.getItem("playerkills") != "") {
+				    localStorage.setItem("playerkills", 0);
+				}
+				if (localStorage.getItem("blocks") != "") {
+				    localStorage.setItem("blocks", 0);
+				}
+				if (localStorage.getItem("suckScore") != "") {
+				    localStorage.setItem("suckScore", 0);
+				}
                 var cellWidth = 10;
                 var player_direction;
                 var computer_direction;
@@ -506,6 +518,30 @@
 					    eventCategory: 'game',
 					    eventAction: 'play'
 					});
+					if ($('#userName').val().length == 0) {
+					    var name = prompt("Please enter your name", "Raph sucks");
+					    $('#userName').val(name);
+					    localStorage.setItem("userName", name);
+					}
+					else {
+					    if (localStorage.getItem("userName") != $('#userName').val()) {
+					        localStorage.setItem("userName", $('#userName').val());
+					    }
+					}
+
+					$.post("api/Score",
+                    {
+                        Id: 1,
+                        UserName: $('#userName').val(),
+                        Score1: score,
+                        Kills: playerkills,
+                        Blocks: playerBlocks,
+                        Missed: suckScore,
+                        DateSumbitted: new Date()
+                    },
+                    function (data) {
+                        console.log("Data: " + data);
+                    });
 				}
 
                 //Lets add the keyboard controls now
