@@ -26,7 +26,7 @@ namespace JBabineau.SnakeTron
             config.Routes.MapHttpRoute(
                 name: "ApiByName",
                 routeTemplate: "api/{controller}/{action}/{name}/{amount}",
-                defaults: null,
+                defaults: new { amount = RouteParameter.Optional },
                 constraints: new { name = @"^[A-Za-z0-9\s]+$", amount = @"^[0-9]+$" }
             );
 
