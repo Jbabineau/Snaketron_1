@@ -102,11 +102,15 @@
             $('#highscore tbody').empty();
 
             var numRecords = data.length;
-
+            var options = {
+                weekday: "long", year: "numeric", month: "short",
+                day: "numeric", hour: "2-digit", minute: "2-digit"
+            };
             for (var i = 0; i < numRecords; i++) {
+                var date = new Date(data[i].DateSubmitted);
                 $('#highscore tbody:last-child').append('<tr><td>' + data[i].UserName +
                     '</td><td>' + data[i].Score1 + '</td><td>' + data[i].Blocks +
-                    '</td><td>' + data[i].Kills + '</td><td>' + data[i].Missed + '</td><td>' + data[i].DateSubmitted + '</td></tr>');
+                    '</td><td>' + data[i].Kills + '</td><td>' + data[i].Missed + '</td><td>' + date.toLocaleDateString("en-US", options) + '</td></tr>');
             }
             hideThrobber();
         };
