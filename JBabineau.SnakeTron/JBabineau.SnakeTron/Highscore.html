@@ -42,6 +42,13 @@
 </head>
 <body>
     <span id="css-throbber"></span>
+    <select id="top">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="1000">1000</option>
+    </select>
     <table id="highscore">
         <thead>
             <tr>
@@ -117,6 +124,7 @@
 
         function showThrobber() {
             $('#highscore').hide();
+            $('#top').hide();
             $('#css-throbber').throbber().show();
             $('#css-throbber').throbber().start();
         };
@@ -125,40 +133,46 @@
             $('#css-throbber').throbber().stop();
             $('#css-throbber').throbber().hide();
             $('#highscore').show();
+            $('#top').show();
         };
 
         $('#Name').click(function () {
             var name = prompt("Enter name you want scores for", "Raph sucks");
+            var amount = $('#top').val();
             showThrobber();
-            $.get("api/Score/GetName/" + name, function (data) {
+            $.get("api/Score/GetName/" + name + "/" + amount, function (data) {
                 populateTable(data);
             });
         });
 
         $('#Score').click(function () {
             showThrobber();
-            $.get("api/Score/GetScores", function (data) {
+            var amount = $('#top').val();
+            $.get("api/Score/GetScores/" + amount, function (data) {
                 populateTable(data);
             });
         });
         
         $('#Blocks').click(function () {
             showThrobber();
-            $.get("api/Score/GetBlocks", function (data) {
+            var amount = $('#top').val();
+            $.get("api/Score/GetBlocks/" + amount, function (data) {
                 populateTable(data);
             });
         });
 
         $('#Kills').click(function () {
             showThrobber();
-            $.get("api/Score/GetKills", function (data) {
+            var amount = $('#top').val();
+            $.get("api/Score/GetKills/" + amount, function (data) {
                 populateTable(data);
             });
         });
 
         $('#Misses').click(function () {
             showThrobber();
-            $.get("api/Score/GetMisses", function (data) {
+            var amount = $('#top').val();
+            $.get("api/Score/GetMisses/" + amount, function (data) {
                 populateTable(data);
             });
         });

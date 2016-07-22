@@ -48,14 +48,14 @@ namespace JBabineau.SnakeTron.Controllers
 
         // Get: api/Score/GetScores
         [HttpGet]
-        public List<Score> GetScores()
+        public List<Score> GetScores(int amount)
         {
             List<Score> result = new List<Score>();
             try
             {
                 using (SnaketronEntities ctx = new SnaketronEntities())
                 {
-                    result = ctx.Scores.Take(10).OrderByDescending(s => s.Score1).ToList();
+                    result = ctx.Scores.OrderByDescending(s => s.Score1).Take(amount).ToList();
                 }
             }
             catch(Exception ex)
@@ -67,7 +67,7 @@ namespace JBabineau.SnakeTron.Controllers
                 result.Add(one);
                 result.Add(two);
 
-                result = result.Take(10).OrderByDescending(s => s.Score1).ToList();*/
+                result = result.Take(amount).OrderByDescending(s => s.Score1).ToList();*/
             }
 
             return result;
@@ -75,14 +75,14 @@ namespace JBabineau.SnakeTron.Controllers
 
         // Get: api/Score/GetBlocks
         [HttpGet]
-        public List<Score> GetBlocks()
+        public List<Score> GetBlocks(int amount)
         {
             List<Score> result = new List<Score>();
             try
             {
                 using (SnaketronEntities ctx = new SnaketronEntities())
                 {
-                    result = ctx.Scores.Take(10).OrderByDescending(s => s.Blocks).ToList();
+                    result = ctx.Scores.OrderByDescending(s => s.Blocks).Take(amount).ToList();
                 }
             }
             catch (Exception ex)
@@ -101,14 +101,14 @@ namespace JBabineau.SnakeTron.Controllers
 
         // Get: api/Score/Get/Kills
         [HttpGet]
-        public List<Score> GetKills()
+        public List<Score> GetKills(int amount)
         {
             List<Score> result = new List<Score>();
             try
             {
                 using (SnaketronEntities ctx = new SnaketronEntities())
                 {
-                    result = ctx.Scores.Take(10).OrderByDescending(s => s.Kills).ToList();
+                    result = ctx.Scores.OrderByDescending(s => s.Kills).Take(amount).ToList();
                 }
             }
             catch (Exception ex)
@@ -127,14 +127,14 @@ namespace JBabineau.SnakeTron.Controllers
 
         // Get: api/Score/Get/Misses
         [HttpGet]
-        public List<Score> GetMisses()
+        public List<Score> GetMisses(int amount)
         {
             List<Score> result = new List<Score>();
             try
             {
                 using (SnaketronEntities ctx = new SnaketronEntities())
                 {
-                    result = ctx.Scores.Take(10).OrderByDescending(s => s.Missed).ToList();
+                    result = ctx.Scores.OrderByDescending(s => s.Missed).Take(amount).ToList();
                 }
             }
             catch (Exception ex)
