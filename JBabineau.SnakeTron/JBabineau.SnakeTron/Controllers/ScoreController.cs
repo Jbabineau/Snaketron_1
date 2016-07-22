@@ -23,16 +23,24 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
-                /*TESTING ONLY*/
+                /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
                 Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
                 Score three = new Score { Id = 3, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Ralph", DateSubmitted = DateTime.Now.AddHours(-10) };
+                Score four = new Score { Id = 4, Score1 = 5, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph 123", DateSubmitted = DateTime.Now };
+                Score five = new Score { Id = 5, Score1 = 1, Blocks = 1, Kills = 5, Missed = 60, UserName = "Ralph", DateSubmitted = DateTime.Now.AddHours(-10) };
+                Score six = new Score { Id = 6, Score1 = 0, Blocks = 1, Kills = 5, Missed = 60, UserName = "Ralph", DateSubmitted = DateTime.Now.AddHours(-10) };
                 result.Add(one);
                 result.Add(two);
                 result.Add(three);
+                result.Add(four);
+                result.Add(five);
+                result.Add(six);
+
 
                 result = result.Where(s => s.UserName == name).Take(10).OrderByDescending(s => s.Score1).ToList();
+                */
             }
 
             return result;
@@ -52,14 +60,14 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch(Exception ex)
             {
-                /* TESTING ONLY*/
+                /* TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
                 Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
                 result.Add(one);
                 result.Add(two);
 
-                result = result.Take(10).OrderByDescending(s => s.Score1).ToList();
+                result = result.Take(10).OrderByDescending(s => s.Score1).ToList();*/
             }
 
             return result;
@@ -79,13 +87,13 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
-                /*TESTING ONLY*/
+                /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
                 Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
                 result.Add(one);
                 result.Add(two);
-                result = result.Take(10).OrderByDescending(s => s.Blocks).ToList();
+                result = result.Take(10).OrderByDescending(s => s.Blocks).ToList();*/
             }
 
             return result;
@@ -105,13 +113,13 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
-                /*TESTING ONLY*/
+                /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
                 Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
                 result.Add(one);
                 result.Add(two);
-                result = result.Take(10).OrderByDescending(s => s.Kills).ToList();
+                result = result.Take(10).OrderByDescending(s => s.Kills).ToList();*/
             }
 
             return result;
@@ -131,13 +139,14 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
-                /*TESTING ONLY*/
+                /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
                 Score two = new Score { Id = 2, Score1 = 10, Blocks = 1, Kills = 5, Missed = 60, UserName = "Raph sucks", DateSubmitted = DateTime.Now.AddHours(-10) };
                 result.Add(one);
                 result.Add(two);
                 result = result.Take(10).OrderByDescending(s => s.Missed).ToList();
+                */
             }
 
             return result;

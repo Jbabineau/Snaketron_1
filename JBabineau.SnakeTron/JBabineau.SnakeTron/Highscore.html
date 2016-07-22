@@ -130,7 +130,7 @@
         $('#Name').click(function () {
             var name = prompt("Enter name you want scores for", "Raph sucks");
             showThrobber();
-            $.get("api/Score/GetName/" + encodeURIComponent(name), function (data) {
+            $.get("api/Score/GetName/" + name, function (data) {
                 populateTable(data);
             });
         });
