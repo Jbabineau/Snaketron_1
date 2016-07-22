@@ -94,6 +94,7 @@
     <Content Include="app.css" />
     <Content Include="Global.asax" />
     <Content Include="hammer.min.js" />
+    <Content Include="Highscore.html" />
     <Content Include="index.html" />
     <Content Include="index2.css" />
     <Content Include="index2.html" />
@@ -109,7 +110,9 @@
       <LastGenOutput>Snaketron.cs</LastGenOutput>
     </Content>
     <Content Include="test.html" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />

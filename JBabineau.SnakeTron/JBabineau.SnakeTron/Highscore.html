@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Snaketron - Highscore</title>
+	<meta charset="utf-8" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+    <table id="highscore">
+        <tr><th>Name</th><th>Score</th><th>Blocks</th><th>Kills</th><th>Suck Score</th><th>Time</th></tr>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //ga
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-81083200-1', 'auto');
+            ga('send', 'pageview');
+
+            $.get("api/Score", function (data) {
+                console.log(data);
+                var numRecords = data.length;
+                /*
+                Blocks: 10
+DateSubmitted: "2016-07-22T05:51:51.5458334-04:00"
+Id: 2
+Kills: 1
+Missed: 100
+Score1: 0
+UserName: "Ralph"
+                */
+                for(var i = 0; i < numRecords; i++) {
+                    $('#highscore tr:last').after('<tr><td>' + data[i].UserName + 
+                        '</td><td>' + data[i].Score1 + '</td><td>' + data[i].Blocks + 
+                        '</td><td>' + data[i].Kills + '</td><td>' + data[i].Missed + '</td><td>' + data[i].DateSubmitted + '</td></tr>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
