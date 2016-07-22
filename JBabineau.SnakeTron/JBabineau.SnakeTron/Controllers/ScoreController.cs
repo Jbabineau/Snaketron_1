@@ -17,7 +17,7 @@ namespace JBabineau.SnakeTron.Controllers
             {
                 using (SnaketronEntities ctx = new SnaketronEntities())
                 {
-                    result = ctx.Scores.Take(10).OrderBy(s => s.Score1).ToList();
+                    result = ctx.Scores.OrderBy(s => s.Score1).ToList();
                 }
             }
             catch(Exception ex)
