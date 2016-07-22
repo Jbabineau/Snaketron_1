@@ -575,20 +575,20 @@
 				var myElement = document.getElementById('canvas');
 
 				var mc = new Hammer(myElement);
-				mc.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+				mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 50 });
                 // listen to events...
-				mc.on("swipeleft swiperight tap press swipeup swipedown", function (ev) {
+				mc.on("panleft panright tap press panup pandown", function (ev) {
 				    myElement.textContent = ev.type + " gesture detected.";
-				    if (ev.type == "swipeleft" && player_direction != "right" && !check_collision(player_headX - 1, player_headY, player_snake_array)) {
+				    if (ev.type == "panleft" && player_direction != "right" && !check_collision(player_headX - 1, player_headY, player_snake_array)) {
 				        player_direction = "left";
 				    }
-				    else if (ev.type == "swipeup" && player_direction != "down" && !check_collision(player_headX, player_headY - 1, player_snake_array)) {
+				    else if (ev.type == "panup" && player_direction != "down" && !check_collision(player_headX, player_headY - 1, player_snake_array)) {
 				        player_direction = "up";
 				    }
-				    else if (ev.type == "swiperight" && player_direction != "left" && !check_collision(player_headX + 1, player_headY, player_snake_array)) {
+				    else if (ev.type == "panright" && player_direction != "left" && !check_collision(player_headX + 1, player_headY, player_snake_array)) {
 				        player_direction = "right";
 				    }
-				    else if (ev.type == "swipedown" && player_direction != "up" && !check_collision(player_headX, player_headY + 1, player_snake_array)) {
+				    else if (ev.type == "pandown" && player_direction != "up" && !check_collision(player_headX, player_headY + 1, player_snake_array)) {
 				        player_direction = "down";
 				    }
 				    else if (ev.type == "tap") {
