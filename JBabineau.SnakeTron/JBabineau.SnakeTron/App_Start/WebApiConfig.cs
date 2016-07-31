@@ -9,6 +9,8 @@ namespace JBabineau.SnakeTron
 {
     public static class WebApiConfig
     {
+
+
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
@@ -17,10 +19,15 @@ namespace JBabineau.SnakeTron
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-            name: "ApiById",
-            routeTemplate: "api/{controller}/{id}",
-            defaults: new { id = RouteParameter.Optional },
-            constraints: new { id = @"^[0-9]+$" }
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+            config.Routes.MapHttpRoute(
+                name: "ApiByAction",
+                routeTemplate: "api/{controller}/{action}/{amount}",
+                defaults: new { amount = RouteParameter.Optional }//,
+                //constraints: new { amount = @"^[0-9]+$" }
             );
 
             config.Routes.MapHttpRoute(
@@ -30,12 +37,6 @@ namespace JBabineau.SnakeTron
                 constraints: new { name = @"^[A-Za-z0-9\s]+$", amount = @"^[0-9]+$" }
             );
 
-            config.Routes.MapHttpRoute(
-                name: "ApiByAction",
-                routeTemplate: "api/{controller}/{action}/{amount}",
-                defaults: new { action = "Get" },
-                constraints: new { amount = @"^[0-9]+$" }
-            );
         }
     }
 }
