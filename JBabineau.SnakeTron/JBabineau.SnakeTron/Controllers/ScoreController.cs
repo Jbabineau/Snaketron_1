@@ -4,12 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Diagnostics;
 
 namespace JBabineau.SnakeTron.Controllers
 {
     public class ScoreController : ApiController
     {
         // Get: api/Score/GetName/{name}
+        /// <summary>
+        /// Gets the specified users top scores
+        /// </summary>
+        /// <param name="name"> UserName</param>
+        /// <param name="amount">Amount of records to return.</param>
+        /// <returns></returns>
         [HttpGet]
         public List<Score> GetName(string name, int amount)
         {
@@ -23,6 +30,8 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
+                Trace.TraceError($"Database Related error: {ex.Message}. Inner Exception: {ex.InnerException}.");
+                // TODO: clean this up.
                 /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
@@ -47,6 +56,11 @@ namespace JBabineau.SnakeTron.Controllers
         }
 
         // Get: api/Score/GetScores
+        /// <summary>
+        /// Gets the top scores.
+        /// </summary>
+        /// <param name="amount">Amount of records to retrun.</param>
+        /// <returns></returns>
         [HttpGet]
         public List<Score> GetScores(int amount)
         {
@@ -60,6 +74,8 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch(Exception ex)
             {
+                Trace.TraceError($"Database Related error: {ex.Message}. Inner Exception: {ex.InnerException}.");
+                // TODO clean this up
                 /* TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
@@ -74,6 +90,11 @@ namespace JBabineau.SnakeTron.Controllers
         }
 
         // Get: api/Score/GetBlocks
+        /// <summary>
+        /// Gets the top blocks.
+        /// </summary>
+        /// <param name="amount">Amount of records to return.</param>
+        /// <returns></returns>
         [HttpGet]
         public List<Score> GetBlocks(int amount)
         {
@@ -87,6 +108,8 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
+                Trace.TraceError($"Database Related error: {ex.Message}. Inner Exception: {ex.InnerException}.");
+                // TODO: Clean this up
                 /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
@@ -100,6 +123,11 @@ namespace JBabineau.SnakeTron.Controllers
         }
 
         // Get: api/Score/Get/Kills
+        /// <summary>
+        /// Gets the top Kills.
+        /// </summary>
+        /// <param name="amount">Amount of records to return.</param>
+        /// <returns></returns>
         [HttpGet]
         public List<Score> GetKills(int amount)
         {
@@ -113,6 +141,8 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
+                Trace.TraceError($"Database Related error: {ex.Message}. Inner Exception: {ex.InnerException}.");
+                // TODO: Clean this up.
                 /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
@@ -126,6 +156,11 @@ namespace JBabineau.SnakeTron.Controllers
         }
 
         // Get: api/Score/Get/Misses
+        /// <summary>
+        /// Gets the Top Misses (AKA: Suck Score)
+        /// </summary>
+        /// <param name="amount">Amount of records to return.</param>
+        /// <returns></returns>
         [HttpGet]
         public List<Score> GetMisses(int amount)
         {
@@ -139,6 +174,8 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch (Exception ex)
             {
+                Trace.TraceError($"Database Related error: {ex.Message}. Inner Exception: {ex.InnerException}.");
+                // TODO: CLean this up.
                 /*TESTING ONLY
                 int breakpoint = 1;
                 Score one = new Score { Id = 1, Score1 = 100, Blocks = 10, Kills = 1, Missed = 100, UserName = "Ralph", DateSubmitted = DateTime.Now };
@@ -152,6 +189,11 @@ namespace JBabineau.SnakeTron.Controllers
             return result;
         }
 
+        // Post: api/Score/AddScore
+        /// <summary>
+        /// Submits a new High Score to the database.
+        /// </summary>
+        /// <param name="score">Score object</param>
         [HttpPost]
         public void AddScore(Score score)
         {
@@ -177,7 +219,7 @@ namespace JBabineau.SnakeTron.Controllers
             }
             catch(Exception ex)
             {
-                int breakpoint = 1;
+                System.Diagnostics.Trace.TraceError($"Database Related error: {ex.Message}. Inner Exception: {ex.InnerException}.");
             }
         }
     }
